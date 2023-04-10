@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 50%
+        maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: hello-world
+  replicas: 2
+  template:
+    metadata:
+      name: hello-world
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: samarthr8/capstone-project:c39
+      tolerations:
+      - key: "hello"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule" 
+   
+---
+
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: hello-world
+  labels:
+    app: hello-world
+
+spec:
+  selector:
+    app: hello-world
+  type: LoadBalancer
+  ports:
+  - name: "hello-world-service"
+    protocol: TCP
+    port: 80
+    targetPort: 8081 
